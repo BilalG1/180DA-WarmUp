@@ -9,7 +9,8 @@ while(True):
 
     # Our operations on the frame come here
     frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    frame_threshold = cv2.inRange(frame_HSV, (100, 20, 20), (380, 100, 80))
+    #print(cv2.mean(frame_HSV))
+    frame_threshold = cv2.inRange(frame_HSV, (110, 200, 200), (140, 280, 250))
 
     # ret,thresh = cv2.threshold(gray,127,255, cv2.THRESH_TRUNC)
     contours,hierarchy = cv2.findContours(frame_threshold, 1, 2)
@@ -20,11 +21,14 @@ while(True):
       if (w*h > maxSize):
         cntStore = cnt
 
-    x1,y1 = cntStore[0][0]
-    cv2.putText(frame_threshold, 'Rectangle', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (180, 180, 180), 2)
-    frame_threshold = cv2.cvtColor(frame_threshold, cv2.COLOR_GRAY2BGR)
-    frame_threshold = cv2.drawContours(frame_threshold, [cntStore], -1, (0,255,0), 3)
-    cv2.imshow('frame',frame_threshold)
+    try:
+      x1,y1 = cntStore[0][0]
+      cv2.putText(frame_threshold, 'Rectangle: '+str(cv2.mean(frame_HSV)), (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (180, 180, 180), 2)
+      frame_threshold = cv2.cvtColor(frame_threshold, cv2.COLOR_GRAY2BGR)
+      frame_threshold = cv2.drawContours(frame_threshold, [cntStore], -1, (0,255,0), 3)
+      cv2.imshow('frame',frame_threshold)
+    except:
+      continue
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
